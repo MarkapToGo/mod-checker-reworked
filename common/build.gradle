@@ -1,0 +1,19 @@
+architectury {
+    common(project.enabled_platforms.split(","))
+}
+
+dependencies {
+    modImplementation "dev.architectury:architectury:${project.architectury_api_version}"
+    
+    // Night Config for JSON configuration
+    implementation 'com.electronwill.night-config:core:3.8.1'
+    implementation 'com.electronwill.night-config:json:3.8.1'
+}
+
+sourceSets {
+    main {
+        resources {
+            srcDir 'src/generated/resources'
+        }
+    }
+}

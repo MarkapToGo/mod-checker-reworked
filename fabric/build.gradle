@@ -1,0 +1,57 @@
+architectury {
+    platformSetupLoomIde()
+    fabric()
+}
+
+configurations {
+    common {
+        canBeResolved = true
+        canBeConsumed = false
+    }
+    compileClasspath.extendsFrom common
+    runtimeClasspath.extendsFrom common
+    developmentFabric.extendsFrom common
+}
+
+dependencies {
+    modImplementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+    
+    modImplementation "dev.architectury:architectury-fabric:${project.architectury_api_version}"
+    
+    common(project(path: ':common', configuration: 'namedElements')) { transitive false }
+    
+    // Include Night Config in the jar
+    include implementation('com.electronwill.night-config:core:3.8.1')
+    include implementation('com.electronwill.night-config:json:3.8.1')
+}
+
+// Include common classes in the jar manually (replacing shadow plugin)
+jar {
+    from(project(':common').sourceSets.main.output) {
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    }
+}
+
+processResources {
+    inputs.property 'version', project.version
+    inputs.property 'mod_id', project.mod_id
+    inputs.property 'mod_name', project.mod_name
+    inputs.property 'mod_license', project.mod_license
+    inputs.property 'mod_description', project.mod_description
+    inputs.property 'minecraft_version', project.minecraft_version
+    inputs.property 'fabric_loader_version', project.fabric_loader_version
+
+    filesMatching('fabric.mod.json') {
+        expand([
+            'mod_id': project.mod_id,
+            'mod_name': project.mod_name,
+            'mod_license': project.mod_license,
+            'mod_version': project.mod_version,
+            'mod_description': project.mod_description,
+            'minecraft_version': project.minecraft_version,
+            'fabric_loader_version': project.fabric_loader_version,
+            'architectury_api_version': project.architectury_api_version
+        ])
+    }
+}

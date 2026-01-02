@@ -1,0 +1,56 @@
+architectury {
+    platformSetupLoomIde()
+    neoForge()
+}
+
+configurations {
+    common {
+        canBeResolved = true
+        canBeConsumed = false
+    }
+    compileClasspath.extendsFrom common
+    runtimeClasspath.extendsFrom common
+    developmentNeoForge.extendsFrom common
+}
+
+repositories {
+    maven { url "https://maven.neoforged.net/releases/" }
+}
+
+dependencies {
+    neoForge "net.neoforged:neoforge:${project.neoforge_version}"
+    
+    modImplementation "dev.architectury:architectury-neoforge:${project.architectury_api_version}"
+    
+    common(project(path: ':common', configuration: 'namedElements')) { transitive false }
+}
+
+// Include common classes and extra libs in the jar manually
+jar {
+    from(project(':common').sourceSets.main.output) {
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    }
+}
+
+processResources {
+    inputs.property 'version', project.version
+    inputs.property 'mod_id', project.mod_id
+    inputs.property 'mod_name', project.mod_name
+    inputs.property 'mod_license', project.mod_license
+    inputs.property 'mod_version', project.mod_version
+    inputs.property 'mod_authors', project.mod_authors
+    inputs.property 'mod_description', project.mod_description
+    inputs.property 'minecraft_version', project.minecraft_version
+
+    filesMatching('META-INF/neoforge.mods.toml') {
+        expand([
+            'mod_id': project.mod_id,
+            'mod_name': project.mod_name,
+            'mod_license': project.mod_license,
+            'mod_version': project.mod_version,
+            'mod_authors': project.mod_authors,
+            'mod_description': project.mod_description,
+            'minecraft_version': project.minecraft_version
+        ])
+    }
+}
