@@ -19,6 +19,9 @@
             "de.stylelabor.markap.ftb_checker_reworked.fabric.ModCheckerReworkedFabric"
         ]
     },
+    "mixins": [
+        "mod_checker_reworked.mixins.json"
+    ],
     "depends": {
         "fabricloader": ">=${fabric_loader_version}",
         "minecraft": ">=1.21.1 <1.22",
