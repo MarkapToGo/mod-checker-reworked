@@ -106,7 +106,8 @@ public class MissingModsScreen extends Screen {
                                                     showRestartScreen = true;
                                                     this.clearWidgets();
                                                     this.addRenderableWidget(Button
-                                                            .builder(Component.literal("Close (then manually)!"),
+                                                            .builder(
+                                                                    Component.literal("Close (then manually restart)!"),
                                                                     b -> this.minecraft.stop())
                                                             .bounds(this.width / 2 - 100, this.height / 2 + 24, 200, 20)
                                                             .build());
@@ -124,8 +125,9 @@ public class MissingModsScreen extends Screen {
 
     @Override
     public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-        // Draw the standard dirt background
-        this.renderBackground(guiGraphics, mouseX, mouseY, partialTicks);
+        // Draw a solid dark background to ensure stability across versions (avoiding
+        // blit/blur crashes)
+        guiGraphics.fill(0, 0, this.width, this.height, 0xFF000000);
 
         // Render the title
         guiGraphics.drawCenteredString(this.font, this.title.getString(), this.width / 2, 20, 0xFFFFFF);
